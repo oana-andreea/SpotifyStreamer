@@ -104,9 +104,9 @@ public class TopTrackActivity extends ActionBarActivity {
                 } else {
                     Toast.makeText(TopTrackActivity.this, getString(R.string.NoTracksFound), Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(TopTrackActivity.this, getString(R.string.SearchException), Toast.LENGTH_SHORT).show();
             }
+            //    Toast.makeText(TopTrackActivity.this, getString(R.string.SearchException), Toast.LENGTH_SHORT).show();
+
         }
     }
 }

@@ -126,7 +126,7 @@ public class MainActivity extends ActionBarActivity {
             } else
                 Toast.makeText(MainActivity.this, getString(R.string.NoArtistFound), Toast.LENGTH_SHORT).show();
             }
-            else Toast.makeText(MainActivity.this, getString(R.string.SearchException), Toast.LENGTH_SHORT).show();
+            //else Toast.makeText(MainActivity.this, getString(R.string.SearchException), Toast.LENGTH_SHORT).show();
         }
     }
 }
