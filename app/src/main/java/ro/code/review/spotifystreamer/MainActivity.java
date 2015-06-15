@@ -4,18 +4,24 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import java.util.List;
+
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
+import ro.code.review.spotifystreamer.adapter.CustomAdapter;
+import ro.code.review.spotifystreamer.utils.Utils;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -41,6 +47,28 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+        final EditText edittext = (EditText) findViewById(R.id.extractEditText);
+        if (Utils.getArtistSearch() != null) {
+            edittext.setText(Utils.getArtistSearch());
+            int textLength = edittext.getText().length();
+            edittext.setSelection(textLength, textLength);// set cursor at the end when coming back
+        }
+
+        edittext.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    Utils.setArtistSearch(String.valueOf(edittext.getText()));
+                    SearchTask task = new SearchTask();
+                    task.execute(new String[]{String.valueOf(edittext.getText())});
+                    return true;
+                }
+                return false;
+            }
+        });
+
         if (Utils.getArtists() == null) {
             SearchTask task = new SearchTask();
             task.execute(new String[]{"Voltaj"});
@@ -72,14 +100,15 @@ public class MainActivity extends ActionBarActivity {
     private class SearchTask extends AsyncTask<String, Void, List> {
         @Override
         protected List<Artist> doInBackground(String... urls) {
-            SpotifyApi api = new SpotifyApi();
-            SpotifyService service = api.getService();
-            ArtistsPager artistsPager;
-            if(urls.length>0)
-              artistsPager = service.searchArtists(urls[0]);
-            else
-              artistsPager = service.searchArtists(getString(R.string.defaultArtistSearch));
-            return artistsPager.artists.items;
+            try {
+                SpotifyApi api = new SpotifyApi();
+                SpotifyService service = api.getService();
+                String search = urls.length > 0 ? urls[0] : getString(R.string.defaultArtistSearch);
+                ArtistsPager artistsPager = service.searchArtists(search);
+                return artistsPager.artists.items;
+            } catch (Exception e) {
+                return null;
+            }
         }
 
 
@@ -91,7 +120,7 @@ public class MainActivity extends ActionBarActivity {
                 ListView listView = (ListView) findViewById(R.id.listView);
                 listView.setAdapter(listAdapter);
             } else
-                Toast.makeText(MainActivity.this, getString(R.string.NoArtistFound), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.SearchException), Toast.LENGTH_SHORT).show();
         }
     }
 }

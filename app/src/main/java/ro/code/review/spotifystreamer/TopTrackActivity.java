@@ -20,7 +20,8 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
-
+import ro.code.review.spotifystreamer.adapter.TopTrackAdapter;
+import ro.code.review.spotifystreamer.utils.Utils;
 
 public class TopTrackActivity extends ActionBarActivity {
 
@@ -28,23 +29,18 @@ public class TopTrackActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getString(R.string.title));
-
         setContentView(R.layout.activity_top_track);
         ListView listView = (ListView) findViewById(R.id.topTracksListView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String artist = String.valueOf(parent.getItemAtPosition(position));
-                Toast.makeText(TopTrackActivity.this, artist, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(TopTrackActivity.this, PlayerActivity.class);
-
                 startActivity(intent);
-
             }
         });
         TracksTask task = new TracksTask();
-        //Find out if an artist ID was sent to this activity
+        //Find out if an search artist ID was sent to this activity
         String artistSpotifyId = getIntent().getStringExtra(Utils.ARTIST);
         if (artistSpotifyId != null) { // if it was send, find out the top 10 tracks
             task.execute(new String[]{artistSpotifyId});
@@ -53,9 +49,8 @@ public class TopTrackActivity extends ActionBarActivity {
             if (Utils.getArtistID() == null) //if there are no tracks to display, execute the default search
             {
                 task.execute(new String[]{getString(R.string.defaultSpotifyId)});
-            }
-            else { //if there are already available tracks to display, nothing new to search
-                ListAdapter listAdapter = new TrackAdapter(TopTrackActivity.this, Utils.getTracks());
+            } else { //if there are already available tracks to display, nothing new to search
+                ListAdapter listAdapter = new TopTrackAdapter(TopTrackActivity.this, Utils.getTracks());
                 listView.setAdapter(listAdapter);
             }
         }
@@ -74,7 +69,6 @@ public class TopTrackActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -99,12 +93,11 @@ public class TopTrackActivity extends ActionBarActivity {
             return tracksPager.tracks;
         }
 
-
         @Override
         protected void onPostExecute(List result) {
             Utils.setTracks(result);
             if (result != null && result.size() > 0) {
-                ListAdapter listAdapter = new TrackAdapter(TopTrackActivity.this, Utils.getTracks());
+                ListAdapter listAdapter = new TopTrackAdapter(TopTrackActivity.this, Utils.getTracks());
                 ListView listView = (ListView) findViewById(R.id.topTracksListView);
                 listView.setAdapter(listAdapter);
             } else {
@@ -112,5 +105,4 @@ public class TopTrackActivity extends ActionBarActivity {
             }
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package ro.code.review.spotifystreamer;
+package ro.code.review.spotifystreamer.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,23 +13,18 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Artist;
+import ro.code.review.spotifystreamer.R;
 
 /**
  * Created by oana on 6/14/15.
  */
 public class CustomAdapter extends ArrayAdapter {
     private Context cont;
-/*    public CustomAdapter(Context context, String[] artists) {
 
-        super(context, R.layout.list_item, artists);
-        cont= context;
-    }
-*/
     public CustomAdapter(Context context, List<Artist> artists) {
         super(context, R.layout.list_item, artists);
         cont= context;
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -40,9 +35,7 @@ public class CustomAdapter extends ArrayAdapter {
         TextView textView = (TextView) customView.findViewById(R.id.textView);
         ImageView imageView =(ImageView)customView.findViewById(R.id.imageView);
         textView.setText(artistDescription);
-        //imageView.setImageResource(R.drawable.abc_btn_radio_to_on_mtrl_000);
-        //TODO get the appropriate size
-        String image = "https://i.scdn.co/image/4f2cf258c9be6b6940feb404652a24318695bfb2";
+        String image = cont.getString(R.string.defaultImage);
         if(artist.images.size()>0)
         image =artist.images.get(0).url;
         Picasso.with(cont).load(image).resize(200,200).into(imageView);
