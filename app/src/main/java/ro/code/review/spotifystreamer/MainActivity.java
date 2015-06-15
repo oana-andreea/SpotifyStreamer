@@ -14,6 +14,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.internal.Util;
+
 import java.util.List;
 
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -31,9 +33,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ListView listView = (ListView) findViewById(R.id.listView);
-        if (Utils.getArtists() != null) {
+        if (Utils.getArtists() != null) { //artists already available
             ListAdapter listAdapter = new CustomAdapter(this, Utils.getArtists());
             listView.setAdapter(listAdapter);
+        } else { //initial results
+            SearchTask task = new SearchTask();
+            task.execute(getString(R.string.defaultArtistSearch));
         }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,17 +67,14 @@ public class MainActivity extends ActionBarActivity {
                     // Perform action on key press
                     Utils.setArtistSearch(String.valueOf(edittext.getText()));
                     SearchTask task = new SearchTask();
-                    task.execute(new String[]{String.valueOf(edittext.getText())});
+                    task.execute(Utils.getArtistSearch());
                     return true;
                 }
                 return false;
             }
         });
 
-        if (Utils.getArtists() == null) {
-            SearchTask task = new SearchTask();
-            task.execute(new String[]{"Voltaj"});
-        }
+
     }
 
     @Override
@@ -107,6 +109,7 @@ public class MainActivity extends ActionBarActivity {
                 ArtistsPager artistsPager = service.searchArtists(search);
                 return artistsPager.artists.items;
             } catch (Exception e) {
+
                 return null;
             }
         }
@@ -115,12 +118,15 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(List result) {
             Utils.setArtists(result);
-            if (result != null && result.size() > 0) {
+            if(result!=null){
+            if (result.size() > 0) {
                 ListAdapter listAdapter = new CustomAdapter(MainActivity.this, Utils.getArtists());
                 ListView listView = (ListView) findViewById(R.id.listView);
                 listView.setAdapter(listAdapter);
             } else
-                Toast.makeText(MainActivity.this, getString(R.string.SearchException), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.NoArtistFound), Toast.LENGTH_SHORT).show();
+            }
+            else Toast.makeText(MainActivity.this, getString(R.string.SearchException), Toast.LENGTH_SHORT).show();
         }
     }
 }

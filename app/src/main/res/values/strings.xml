@@ -11,10 +11,10 @@
     <string name="title_activity_top_track">TopTrackActivity</string>
     <string name="title_activity_player">PlayerActivity</string>
     <string name="title">Spotify Streamer</string>
-    <string name="defaultArtistSearch">Eminem</string>
+    <string name="defaultArtistSearch">Voltaj</string>
     <string name="searchCountry">RO</string>
     <string name="defaultSpotifyId">5pKCCKE2ajJHZ9KAiaK11H</string>
-    <string name="NoTracksFound">Artists tracks not available</string>
+    <string name="NoTracksFound">Artists tracks not yet available, please try again later</string>
     <string name="SearchException">Please refine your search and try again</string>
     <string name="defaultImage">http://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Music-GClef.svg/200px-Music-GClef.svg.png</string>
     <string name="playerInfo">Work in progress: Stage 2:)</string>

@@ -43,12 +43,12 @@ public class TopTrackActivity extends ActionBarActivity {
         //Find out if an search artist ID was sent to this activity
         String artistSpotifyId = getIntent().getStringExtra(Utils.ARTIST);
         if (artistSpotifyId != null) { // if it was send, find out the top 10 tracks
-            task.execute(new String[]{artistSpotifyId});
+            task.execute(artistSpotifyId);
             Utils.setArtistID(artistSpotifyId);
         } else {
             if (Utils.getArtistID() == null) //if there are no tracks to display, execute the default search
             {
-                task.execute(new String[]{getString(R.string.defaultSpotifyId)});
+                task.execute(getString(R.string.defaultSpotifyId));
             } else { //if there are already available tracks to display, nothing new to search
                 ListAdapter listAdapter = new TopTrackAdapter(TopTrackActivity.this, Utils.getTracks());
                 listView.setAdapter(listAdapter);
@@ -80,28 +80,32 @@ public class TopTrackActivity extends ActionBarActivity {
     private class TracksTask extends AsyncTask<String, Void, List> {
         @Override
         protected List<Track> doInBackground(String... urls) {
-            SpotifyApi api = new SpotifyApi();
-            SpotifyService service = api.getService();
-            Map<String, Object> map = new HashMap<>();
-            map.put(Utils.COUNTRY, getString(R.string.searchCountry));
-            Tracks tracksPager;
-            if (urls.length > 0)
-                tracksPager = service.getArtistTopTrack(urls[0], map);
-            else
-                tracksPager = service.getArtistTopTrack(getString(R.string.defaultSpotifyId), map);
+            try {
+                SpotifyApi api = new SpotifyApi();
+                SpotifyService service = api.getService();
+                Map<String, Object> map = new HashMap<>();
+                map.put(Utils.COUNTRY, getString(R.string.searchCountry));
+                Tracks tracksPager = service.getArtistTopTrack((urls.length > 0) ? urls[0] : getString(R.string.defaultSpotifyId), map);
+                return tracksPager.tracks;
+            } catch (Exception e) {
 
-            return tracksPager.tracks;
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(List result) {
             Utils.setTracks(result);
-            if (result != null && result.size() > 0) {
-                ListAdapter listAdapter = new TopTrackAdapter(TopTrackActivity.this, Utils.getTracks());
-                ListView listView = (ListView) findViewById(R.id.topTracksListView);
-                listView.setAdapter(listAdapter);
+            if (result != null) {
+                if (result.size() > 0) {
+                    ListAdapter listAdapter = new TopTrackAdapter(TopTrackActivity.this, Utils.getTracks());
+                    ListView listView = (ListView) findViewById(R.id.topTracksListView);
+                    listView.setAdapter(listAdapter);
+                } else {
+                    Toast.makeText(TopTrackActivity.this, getString(R.string.NoTracksFound), Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(TopTrackActivity.this, getString(R.string.NoTracksFound), Toast.LENGTH_SHORT).show();
+                Toast.makeText(TopTrackActivity.this, getString(R.string.SearchException), Toast.LENGTH_SHORT).show();
             }
         }
     }
