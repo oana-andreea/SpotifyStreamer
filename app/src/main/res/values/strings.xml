@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Spotify Streamer</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="searchArtist">Search Artist</string>
+    <string name="NewText">New Text</string>
+    <string name="ArtistImage">ArtistImage</string>
+    <string name="NoArtistFound">No artist was found</string>
+    <string name="TrackAlbum">Album Image</string>
+    <string name="title_activity_top_track">TopTrackActivity</string>
+    <string name="title_activity_player">PlayerActivity</string>
+    <string name="title">Spotify Streamer</string>
+    <string name="defaultArtistSearch">Eminem</string>
+    <string name="searchCountry">RO</string>
+    <string name="defaultSpotifyId">5pKCCKE2ajJHZ9KAiaK11H</string>
+    <string name="NoTracksFound">Artists tracks not available</string>
+</resources>
