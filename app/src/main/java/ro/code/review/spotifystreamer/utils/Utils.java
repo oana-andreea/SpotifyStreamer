@@ -1,5 +1,6 @@
 package ro.code.review.spotifystreamer.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kaaes.spotify.webapi.android.models.Artist;
@@ -18,6 +19,18 @@ public class Utils {
     public static final String ARTIST = "artist";
     public static final String TRACK = "track";
     public static final String COUNTRY = "country";
+
+    public static final String TRACK_NAME = "track name";
+    public static final String TRACK_ALBUM = "track album";
+    public static final String TRACK_ARTIST = "track artist";
+    public static final String TRACK_ICON = "track album icon";
+
+    public static final int TRACK_SPOTIFY_ID = 0;
+    public static final int TRACK_NAME_ID = 1;
+    public static final int TRACK_ALBUM_ID = 2;
+    public static final int TRACK_ARTIST_ID = 3;
+    public static final int TRACK_ICON_ID = 4;
+    public static final int TRACK_DURATION = 5;
 
 
     public static List<Artist> getArtists() {
@@ -53,4 +66,16 @@ public class Utils {
         Utils.artistSearch = artistSearch;
     }
 
+    public static ArrayList<String> getTrackDetails(int position) {
+        Track track = tracks.get(position);
+        ArrayList<String> trackDetails = new ArrayList<String>();
+        trackDetails.add(track.id);
+        trackDetails.add(track.name);
+        trackDetails.add(track.album.name);
+        String image = track.album.images.isEmpty() ? "" : track.album.images.get(0).url;
+        trackDetails.add(image);
+        String duration = track.duration_ms > 0 ? String.valueOf(track.duration_ms) : "";
+        trackDetails.add(duration);
+        return trackDetails;
+    }
 }

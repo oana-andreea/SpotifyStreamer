@@ -12,6 +12,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.internal.Util;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class TopTrackActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(TopTrackActivity.this, PlayerActivity.class);
+                intent.putExtra(Utils.TRACK,position);
                 startActivity(intent);
             }
         });
