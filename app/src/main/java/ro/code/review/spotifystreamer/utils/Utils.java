@@ -78,4 +78,25 @@ public class Utils {
         trackDetails.add(duration);
         return trackDetails;
     }
+
+    public static int getNextPreviewPosition(int position) {
+        Track result = null;
+        int nextPosition = position;
+        while (nextPosition < tracks.size() && result == null) //searches the following tracks to see if they have preview_url
+            if (tracks.get(nextPosition).preview_url != null) {
+                result = tracks.get(nextPosition);
+            } else nextPosition++;
+
+        if ((nextPosition == tracks.size())) {
+        nextPosition = 0;
+            while (nextPosition < position && result == null)
+                if (tracks.get(nextPosition).preview_url != null) { //no track was found following in the list.loop. start searching for a preview_url previous in the list
+                    result = tracks.get(nextPosition);
+                } else nextPosition++;
+        if(result==null) nextPosition = -1; //there is no preview_url in the list.
+
+        }
+
+    return nextPosition;
+}
 }
